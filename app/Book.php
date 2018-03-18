@@ -7,22 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     //
-    protected $fillable=['judul','amount','cover','author_id','penerbit','tahun','cover'];
+    protected $fillable=['judul','amount','cover','author','penerbit','tahun','cover'];
 
-    public function author()
+    public function getBorrowedAttribute()
     {
-    	return $this->belongsTo('App\Author');
+        return $this->borrowLogs()->borrowed()->count();
     }
 
     public function borrowLogs()
     {
-    	return $this->hasMany('App\BorrowLog');
+        return $this->hasMany('App\BorrowLog');
     }
 
     public function getStockAttribute()
     {
-    	$borrowed = $this->borrowLogs()->count();
-    	$stock = $this->amount - $borrowed;
-    	return $stock;
+        $borrowed = $this->borrowLogs()->borrowed()->count();
+
+        $stock = $this->amount - $borrowed;
+
+        return $stock;
     }
 }

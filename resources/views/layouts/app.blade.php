@@ -44,8 +44,8 @@
                             <li><a href="{{url('/home')}}">Dashboard</a></li>
                              @endif
                              @role('admin')
-                            <li><a href="{{route('authors.index')}}">Pengarang</a></li>
                             <li><a href="{{route('books.index')}}">Buku</a></li>
+                            <li><a href="{{route('statistics.index')}}">Rekap</a></li>
                        @endrole
                     </ul>
 
@@ -88,9 +88,9 @@
     <!-- Scripts -->
     <script src="{{ asset('/js/app.js') }}"></script>
     <script src="/js/dataTables.bootstrap.min.js"></script>
-    <script src="/js/jquery.dataTables.min.js"></script>
-    <script src="/js/jquery-3.1.0.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script><!-- 
+    <script src="/js/jquery-3.1.0.min.js"></script> -->
+    <!-- <script src="/js/bootstrap.min.js"></script> -->
     <script src="/js/custom.js"></script>
     @yield('scripts')
 </body>

@@ -14,7 +14,7 @@ class GuestController extends Controller
     public function index(Request $request,Builder $htmlBuilder)
     {
     	if ($request->ajax()) {
-    		$books = Book::with('author');
+    		$books = Book::select(['id','cover','judul','amount','author','penerbit','tahun']);
              return Datatables::of($books)
             ->addColumn('cover', function($book){
                 return '<img src="/img/'.$book->cover.'" height="100px" widht="100px" >';
@@ -31,7 +31,7 @@ class GuestController extends Controller
         ->addColumn(['data'=>'cover','name'=>'cover','title'=>'Cover'])
         ->addColumn(['data'=>'judul','name'=>'judul','title'=>'Judul'])
         ->addColumn(['data'=>'stock','name'=>'stock','title'=>'Stock'])
-        ->addColumn(['data'=>'author.name','name'=>'author.name','title'=>'Pengarang'])
+        ->addColumn(['data'=>'author','name'=>'author','title'=>'Pengarang'])
         ->addColumn(['data'=>'penerbit','name'=>'penerbit','title'=>'Penerbit'])
         ->addColumn(['data'=>'tahun','name'=>'tahun','title'=>'Tahun'])
         ->addColumn(['data'=>'action','name'=>'action','title'=>'','orderable'=>false,'searchable'=>false]);

@@ -14,6 +14,10 @@ class User extends Authenticatable
     use LaratrustUserTrait;
     use Notifiable;
 
+     protected $casts = [
+        'is_verified'   =>  'boolean',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,22 +38,24 @@ class User extends Authenticatable
 
     public function borrow(Book $book)
     {
-        if ($this->borrowLogs()->where('book_id',$book->id)->where('is_returned',0)->count()>0) {
-            throw new BookException("Buku $book->judul sedang Anda Pinjam.");
-        }
-
+        // Cek apakah masih ada stock buku
         if ($book->stock < 1) {
-            throw new BookException("Buku $book->title sedang tidak tersedia");
-        }
-        if ($this->borrowLogs()->where('book_id',$book->id)->where('is_returned',0)->count()>0) {
-            throw new BookException("Buku $book->title sedang Anda pinjam ");
+            throw new BookException("Buku $book->title sedang tidak tersedia.");
         }
 
-        $borrowLog = BorrowLog::create(['user_id'=>$this->id,'book_id'=>$book->id]);
+        // Cek apakah buku ini sedang dipinjam oleh user
+        if ($this->borrowLogs()->where('book_id', $book->id)->where('is_returned', 0)->count() > 0) {
+            throw new BookException("Buku $book->title sedang Anda pinjam.");
+        }
+
+        $borrowLog = BorrowLog::create(['user_id' => $this->id, 'book_id' => $book->id]);
+
         return $borrowLog;
     }
+
     public function borrowLogs()
     {
         return $this->hasMany('App\BorrowLog');
     }
 }
+

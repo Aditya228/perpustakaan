@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.master')
+
 @section('content')
 <div class="container">
 	<div class="row">
@@ -7,14 +8,11 @@
 				<li><a href="{{url('/home')}}">Dashboard</a></li>
 				<li class="active">Buku</li>
 			</ul>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h2 class="panel-title">Buku</h2>
-				</div>
 
 				<div class="panel-body">
 					<p><a class="btn btn-primary" href="{{url('/admin/books/create')}}">Tambah</a></p>
 					{!! $html->table(['class'=>'table-striped']) !!}
+				</div>
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 @section('content')
 <div class="container">
 	<div class="row">
@@ -17,7 +17,7 @@
 				<div class="panel-body">
 					{!! Form::model($book,['url'=>route('books.update',$book->id),
 					'method'=>'put','files'=>'true','class'=>'form-horizontal']) !!}
-					@include('books._form')
+					@include('books._editpro')
 					{!! Form::close() !!}
 				</div>
 			</div>

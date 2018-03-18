@@ -17,12 +17,10 @@ class CreateBooksTable extends Migration
             $table->increments('id');
             $table->string('judul');
             $table->integer('amount')->unsigned();
-            $table->integer('author_id')->unsigned();
+            $table->string('author');
             $table->string('penerbit');
             $table->integer('tahun');
             $table->string('cover')->nullable();
-            $table->foreign('author_id')->references('id')->on('authors')
-                  ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

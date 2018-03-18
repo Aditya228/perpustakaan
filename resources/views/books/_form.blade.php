@@ -14,11 +14,11 @@
 	</div>
 </div>
 
-<div class="form-group {!! $errors->has('author_id')?'has-error':'' !!}">
-	{!! Form::label('author_id','Pengarang',['class'=>'col-md-2 control-label']) !!}
+<div class="form-group {!! $errors->has('author')?'has-error':'' !!}">
+	{!! Form::label('author','Pengarang',['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('author_id',["Pilih Pengarang"]+App\Author::pluck('name','id')->all(),null) !!}
-		{!! $errors->first('author_id','<p class="help-block">:message</p>') !!}
+		{!! Form::text('author',null,['class'=>'form-control']) !!}
+		{!! $errors->first('author','<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 

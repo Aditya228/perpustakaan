@@ -28,16 +28,16 @@ class UsersSeeder extends Seeder
         //sample admin
         $admin = new User();
         $admin->name='Admin Perpustakaan';
-        $admin->email='admin@perpustakaan.com';
-        $admin->password=bcrypt('perpustakaan');
+        $admin->email='admin@gmail.com';
+        $admin->password=bcrypt('rahasia');
         $admin->save();
         $admin->attachRole($adminRole);
 
         //sample member
         $member = new User();
         $member->name='Sample Member';
-        $member->email='member@perpustakaan.com';
-        $member->password=bcrypt('perpustakaan');
+        $member->email='member@gmail.com';
+        $member->password=bcrypt('rahasia');
         $member->save();
         $member->attachRole($memberRole);
     }

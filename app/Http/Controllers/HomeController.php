@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laratrust;
 use Illuminate\Support\Facades\Auth;
+use App\Book;
+use App\BorrowLog;
 
 class HomeController extends Controller
 {

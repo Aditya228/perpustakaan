@@ -24,7 +24,7 @@ class BooksController extends Controller
     {
         //
         if ($request->ajax()) {
-            $books = Book::with('author');
+            $books = Book::select(['id','cover','judul','amount','author','penerbit','tahun']);
             return Datatables::of($books)
             ->addColumn('cover', function($book){
                 return '<img src="/img/'.$book->cover.'" height="100px" widht="100px" >';
@@ -41,7 +41,7 @@ class BooksController extends Controller
         ->addColumn(['data'=>'cover','name'=>'cover','title'=>'Cover'])
         ->addColumn(['data'=>'judul','name'=>'judul','title'=>'Judul'])
         ->addColumn(['data'=>'amount','name'=>'amount','title'=>'Stock'])
-        ->addColumn(['data'=>'author.name','name'=>'author.name','title'=>'Pengarang'])
+        ->addColumn(['data'=>'author','name'=>'author','title'=>'Pengarang'])
         ->addColumn(['data'=>'penerbit','name'=>'penerbit','title'=>'Penerbit'])
         ->addColumn(['data'=>'tahun','name'=>'tahun','title'=>'Tahun'])
         ->addColumn(['data'=>'action','name'=>'action','title'=>'','orderable'=>false,'searchable'=>false]);
@@ -71,7 +71,7 @@ class BooksController extends Controller
         $this->validate($request,[
             'judul'=>'required|max:200',
             'amount'=>'required|numeric',
-            'author_id'=>'required|exists:authors,id',
+            'author'=>'required|max:200',
             'penerbit'=>'required|max:255',
             'tahun'=>'required|max:20',
             'cover'=>'image|max:2048'
@@ -89,7 +89,7 @@ class BooksController extends Controller
         }
         Session::flash("flash_notification",[
             "level"=>"success",
-            "message"=>"Berhasil menyimpan $book->judul"]);
+            "message"=>"Berhasil menyimpan Buku $book->judul"]);
         return redirect()->route('books.index');
     }
 
@@ -129,10 +129,11 @@ class BooksController extends Controller
         $this->validate($request,[
             'judul'=>'required|max:200',
             'amount'=>'required|numeric',
-            'author_id'=>'required|exists:authors,id',
+            'author'=>'required|max:200',
             'penerbit'=>'required|max:200',
             'tahun'=>'required|max:20',
-            'cover'=>'image|max:2048']);
+            'cover'=>'image|max:2048'
+            ]);
 
         $book = Book::find($id);
         $book->update($request->all());
@@ -158,8 +159,7 @@ class BooksController extends Controller
         }
         Session::flash("flash_notification",[
             "level"=>"success",
-            "message"=>"Berhasil men
-            gubah $book->judul"]);
+            "message"=>"Berhasil mengubah Buku $book->judul"]);
         return redirect()->route('books.index');
     }
 
@@ -178,44 +178,61 @@ $book->delete();
 
 Session::flash("flash_notification",[
             "level"=>"success",
-            "message"=>'Buku berhasil dihapus']);
+            "message"=>'Buku Berhasil Dihapus']);
         return redirect()->route('books.index');
     }
 
-    public function borrow($id)
+     public function borrow($id)
     {
         try {
-            $book=Book::findOrFail($id);
+            $book = Book::findOrFail($id);
+
             Auth::user()->borrow($book);
+
             Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"Berhasil Meminjam $book->title" ]);
-        } catch(BookException $e) {
+                "level" => "success",
+                "icon" => "fa fa-check",
+                "message" => "Berhasil Meminjam Buku $book->judul"
+            ]);
+
+        } catch (BookException $e) {
             Session::flash("flash_notification", [
-            "level"=>"danger",
-            "message"=>$e->getMessage() ]);
-        } catch(FileNotFoundException $e) {
+                "level" => "danger",
+                "icon" => "fa fa-ban",
+                "message" => $e->getMessage()
+            ]);
+
+        } catch (ModelNotFoundException $e) {
             Session::flash("flash_notification", [
-            "level"=>"danger",
-            "message"=>"Buku Tidak Ditemukan" ]);
+                "level" => "danger",
+                "icon" => "fa fa-ban",
+                "message" => "Buku tidak ditemukan"
+            ]);
         }
-        return redirect('/');
+
+        return redirect("/");
     }
+   
     public function returnBack($book_id)
     {
         $borrowLog = BorrowLog::where('user_id', Auth::user()->id)
-        ->where('book_id',$book_id)
-        ->where('is_returned',0)
-        ->first();
-        if ($borrowLog)
-        {
-            $borrowLog->is_returned=true;
+            ->where('book_id', $book_id)
+            ->where('is_returned', 0)
+            ->first();
+
+        if ($borrowLog) {
+
+            $borrowLog->is_returned = true;
             $borrowLog->save();
+
             Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"Berhasil Mengembalikan ".$borrowLog->book->title ]);
+                "level" => "success",
+                "icon" => "fa fa-check",
+                "message" => "Berhasil Mengembalikan Buku " . $borrowLog->book->judul
+            ]);
         }
-        return redirect('/home');
+
+        return redirect('/');
     }
 
 }
